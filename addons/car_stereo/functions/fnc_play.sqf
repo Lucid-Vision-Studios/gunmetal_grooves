@@ -27,10 +27,13 @@ private _soundSource = if (
 ) then {
     // Use distance to simulate bass boosted mode
     private _bassBoosted = _vehicle getVariable [QGVAR(bassBoosted), false];
-    private _distance = [DISTANCE_NORMAL, DISTANCE_BASS_BOOSTED] select _bassBoosted;
-    _vehicle say3D [_soundClass, _distance, 1, false, _offset]
+    private _distance = [
+        linearConversion [1,10, _volume, DISTANCE_MINIMUM, DISTANCE_NORMAL, true],
+        linearConversion [1,10, _volume, DISTANCE_MINIMUM, DISTANCE_BASS_BOOSTED, true]
+    ] select _bassBoosted;
+    _vehicle say3D [_soundClass, _distance, 1, false, _offset];
 } else {
-    playSound [_soundClass, false, _offset]
+    playSound [_soundClass, false, _offset];
 };
 
 _vehicle setVariable [QGVAR(soundSource), _soundSource];
